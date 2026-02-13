@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nimbus Block 2.0</title>
+  <style>
+    /* ---------------- CSS START ---------------- */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url('assets/backgroundblocks.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      color: #0f172a;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nimbus-background {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .nimbus-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      /* Very subtle */
+      animation: float-orb 20s infinite ease-in-out alternate;
+    }
+
+    .orb-1 {
+      top: -10%;
+      left: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle at 50% 50%, #bfdbfe, #a855f7);
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      top: 40%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle at 50% 50%, #fbbf24, #fb7185);
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      bottom: -10%;
+      left: 20%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle at 50% 50%, #22c55e, #0ea5e9);
+      animation-delay: -10s;
+    }
+
+    @keyframes float-orb {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.15;
+      }
+
+      33% {
+        transform: translate(30px, -50px) scale(1.1);
+        opacity: 0.2;
+      }
+
+      66% {
+        transform: translate(-20px, 20px) scale(0.95);
+        opacity: 0.12;
+      }
+
+      100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.15;
+      }
+    }
+
+    .nimbus-grid::before,
+    .nimbus-grid::after {
+      content: "";
+      position: absolute;
+      inset: 12% 8%;
+      border-radius: 32px;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.15;
+    }
+
+    .nimbus-grid::after {
+      inset: auto 18% 6% auto;
+      width: 260px;
+      height: 260px;
+      background-image: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.55), transparent 60%);
+      filter: blur(18px);
+      opacity: 0.35;
+    }
+
+    /* Start Screen Styles */
+    #startScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      /* Background handled by body/nimbus-background, but we might want a slight backdrop here */
+    }
+
+    .start-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
+      animation: fadeIn 0.8s ease-out;
+      width: 100%;
+      /* Ensure content spans full width */
+    }
+
+    .start-logo-container {
+      position: relative;
+      margin-bottom: 32px;
+      /* Purple Banner Style: Translucent & Full Width -> NOW MATCHED TO GAME BANNER */
+      background: rgba(15, 23, 42, 0.85);
+      padding: 20px 0;
+      /* Minimal vertical padding to fit logo */
+      width: 100%;
+      /* Span full width */
+      max-width: none;
+      border-radius: 0;
+      /* No rounded corners for full width banner */
+      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+      /* Less blur for more translucency */
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Animation: Float removed/adjusted as it might look weird on a full width banner. 
+         Let's keep the logo floating inside optionally, or just static banner. 
+         User said "atraviese de un lado a otro". Usually static. 
+         Let's remove the float from container. */
+    }
+
+    .start-logo {
+      height: 420px;
+      /* Tripled from 140px */
+      width: auto;
+      filter: drop-shadow(0 0 50px rgba(168, 85, 247, 0.6));
+      /* Enhanced glow for larger size */
+    }
+
+    .start-title {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .start-subtitle {
+      font-size: 16px;
+      color: #64748b;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 100%);
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 16px 48px;
+      border-radius: 999px;
+      border: none;
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .start-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transform: skewX(-20deg) translateX(-150%);
+      transition: transform 0.5s;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 20px 30px rgba(99, 102, 241, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .start-btn:hover::after {
+      transform: skewX(-20deg) translateX(150%);
+      transition: transform 0.7s;
+    }
+
+    .secondary-options {
+      display: flex;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .sec-btn {
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: all 0.2s;
+    }
+
+    .sec-btn:hover {
+      background: rgba(255, 255, 255, 0.6);
+      transform: translateY(-2px);
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Hide app shell initially */
+    .app-shell {
+      display: none;
+      /* Hidden by default */
+      animation: fadeIn 0.5s ease-out;
+      padding-top: 160px;
+      /* Increased to clear bigger banner */
+    }
+
+    /* ---------------- CSS END ---------------- */
+
+    .app-card {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 24px 26px 20px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.78));
+      border-radius: 26px;
+      box-shadow: 0 40px 80px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(148, 163, 184, 0.18);
+      backdrop-filter: blur(26px);
+    }
+
+    /* Game Page Banner - Fixed Top Full Width */
+    .app-header {
+      position: fixed;
+      /* Stick to top */
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      /* Matched to Game Banner */
+      backdrop-filter: blur(12px);
+      padding: 24px 0;
+      /* Bigger padding */
+      display: none;
+      /* Hidden by default (shown via JS) */
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      /* High z-index */
+      margin: 0;
+    }
+
+    .app-header::after {
+      /* Remove shimmer from this banner style to keep it clean, or keep it subtle? 
+          User didn't explicitly ask to remove shimmer, but full width shimmer might be distracting.
+          Let's remove the ::after pseudo-element for now or reset it to none. */
+      content: none;
+    }
+
+    .app-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-logo {
+      height: 72px;
+      /* Slightly larger logo to match bigger banner */
+      width: auto;
+      filter: drop-shadow(0 2px 10px rgba(168, 85, 247, 0.5));
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -100%;
+      }
+
+      20% {
+        left: 200%;
+      }
+
+      100% {
+        left: 200%;
+      }
+    }
+
+    .app-main {
+      display: grid;
+      grid-template-columns: 180px 320px 180px;
+      gap: 24px;
+      align-items: start;
+      justify-content: center;
+    }
+
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    /* Stats Panel */
+    .stats-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 16px;
+      min-height: 84px;
+      flex-shrink: 0;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(224, 242, 254, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 10px 30px rgba(148, 163, 184, 0.3);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      color: #0f172a;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(148, 163, 184, 0.4);
+      margin: 0 12px;
+    }
+
+    /* Restored Layout Cards with v2.0 Polish */
+    .playfield-card {
+      padding: 16px;
+      border-radius: 24px;
+      width: 320px;
+      flex-shrink: 0;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.7), rgba(241, 245, 249, 0.8));
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 20px 50px rgba(100, 116, 139, 0.15);
+      display: flex;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Adjust Game Container - fixed size so playfield never shifts */
+    .game-container {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), 0 10px 30px rgba(15, 23, 42, 0.15);
+      width: 288px;
+      height: 528px;
+      height: 528px;
+      flex-shrink: 0;
+    }
+
+    .brand-watermark {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 60px;
+      /* Increased size for better visibility */
+      height: 60px;
+      overflow: hidden;
+      opacity: 0.22;
+      /* 18-25% range */
+      pointer-events: none;
+      filter: grayscale(100%) brightness(200%);
+      /* White/soft look */
+      z-index: 5;
+      /* Below overlays but above board bg? No, overlaps board */
+    }
+
+    .brand-watermark img {
+      height: 100%;
+      width: auto;
+      max-width: none;
+      /* Adjust positioning to crop text if needed. Assuming icon is on left. */
+      object-fit: cover;
+      object-position: left center;
+    }
+
+    /* Enhancements */
+    .primary-button {
+      background: linear-gradient(135deg, #e0f2fe, #bfdbfe);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.6);
+      margin-top: 14px;
+      padding: 8px 22px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #0f172a;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .primary-button:hover {
+      background: linear-gradient(135deg, #dbeafe, #a5b4fc);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.8);
+    }
+
+    .primary-button:active {
+      transform: translateY(0);
+      box-shadow: 0 0 0 0.7px rgba(148, 163, 184, 0.9), 0 6px 14px rgba(148, 163, 184, 0.9);
+    }
+
+    /* Make font smoother */
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    canvas#tetris {
+      display: block;
+      background: radial-gradient(circle at top, #1e293b 0, #0f172a 100%);
+    }
+
+    /* Sidebar removed/merged into side-panel */
+
+    .glass-panel {
+      position: relative;
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
+      box-shadow: 0 8px 24px rgba(148, 163, 184, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+    }
+
+    .glass-panel h2 {
+      color: #64748b;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      margin-top: 8px;
+      font-size: 20px;
+      color: #0f172a;
+      font-weight: 700;
+      background: none;
+      box-shadow: none;
+      padding: 0;
+      font-variant-numeric: tabular-nums;
+      min-width: 3ch;
+    }
+
+    canvas#nextPiece,
+    canvas#holdPiece {
+      background: rgba(15, 23, 42, 0.03);
+      border-radius: 12px;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Overlays V2 */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, rgba(248, 250, 252, 0.9) 0, rgba(226, 232, 240, 0.98) 55%, rgba(209, 213, 219, 1) 100%);
+      color: #0f172a;
+      z-index: 10;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .overlay-content {
+      text-align: center;
+    }
+
+    .overlay h2 {
+      font-size: 24px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .glow-text {
+      font-size: 12px;
+      color: #a855f7;
+      margin-bottom: 20px;
+      letter-spacing: 0.2em;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+    }
+
+    .controls-hint {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      opacity: 0.7;
+    }
+
+    .controls-hint p {
+      font-size: 11px;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .small-hint {
+      font-size: 10px;
+      text-align: center;
+      color: #94a3b8;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .pill {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #4b5563;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .pill:hover {
+      background: rgba(248, 250, 252, 0.9);
+    }
+
+    @media (max-width: 720px) {
+      .app-shell {
+        padding: 18px 14px;
+      }
+
+      .app-card {
+        flex-direction: column;
+        align-items: center;
+        padding: 18px 16px 16px;
+      }
+
+      .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .app-main {
+        grid-template-columns: 1fr;
+        justify-content: center;
+      }
+
+      .side-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .playfield-card {
+        width: 320px;
+        max-width: 100%;
+        order: -1;
+        /* Keep board on top on mobile if desired, or let it flow naturally */
+      }
+
+      /* Order: Board first, then panels? Or panels then board? 
+         On mobile, maybe Score/Next on top, Board, then Hold?
+         Let's keep natural order: Left (Hold), Center (Board), Right (Next).
+         But flex direction column on app-main?
+      */
+
+    }
+
+    /* ---------------- CSS END ---------------- */
+  </style>
+</head>
+
+<body>
+  <div class="nimbus-background">
+    <div class="nimbus-orb orb-1"></div>
+    <div class="nimbus-orb orb-2"></div>
+    <div class="nimbus-orb orb-3"></div>
+    <div class="nimbus-grid"></div>
+  </div>
+
+  <div id="startScreen">
+    <div class="start-content">
+      <div class="start-logo-container">
+        <img src="assets/nimbusblockslogo.png" alt="Nimbus Blocks" class="start-logo">
+      </div>
+      <!-- Text removed as requested -->
+
+      <button id="mainStartBtn" class="start-btn">START GAME</button>
+
+      <div class="secondary-options">
+        <button id="btnMissions" class="sec-btn">Missions</button>
+        <button id="btnDaily" class="sec-btn">Daily Challenge</button>
+        <button id="btnSettings" class="sec-btn">Settings</button>
+      </div>
+    </div>
+
+    <!-- Menu Overlays (Initially Hidden) -->
+    <div class="overlay hidden" id="missionsOverlay"
+      style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);">
+      <div class="overlay-content">
+        <h2>Missions</h2>
+        <p style="color: #94a3b8; margin-bottom: 24px;">Campaign Coming Soon!</p>
+        <div class="controls-hint" style="grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px;">
+          <p>Mission 1: Clear 10 Lines (Locked)</p>
+          <p>Mission 2: Score 5000 (Locked)</p>
+          <p>Mission 3: Survive 5 mins (Locked)</p>
+        </div>
+        <button id="closeMissions" class="primary-button">Back</button>
+      </div>
+    </div>
+
+    <div class="overlay hidden" id="dailyOverlay"
+      style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);">
+      <div class="overlay-content">
+        <h2>Daily Challenge</h2>
+        <div class="glow-text">TODAY'S GOAL</div>
+        <p style="color: #cbd5e1; margin-bottom: 24px; font-size: 14px;">Clear 40 Lines in under 3 minutes.</p>
+        <button class="pill" style="margin-bottom: 16px;">Start Challenge</button>
+        <br>
+        <button id="closeDaily" class="primary-button">Back</button>
+      </div>
+    </div>
+
+    <div class="overlay hidden" id="settingsOverlay"
+      style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);">
+      <div class="overlay-content">
+        <h2>Settings</h2>
+        <div class="controls-hint"
+          style="grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; text-align: left;">
+          <label style="display: flex; justify-content: space-between; color: white; font-size: 13px;">
+            <span>Music</span>
+            <input type="checkbox" checked onchange="toggleMusic(this)">
+          </label>
+          <label style="display: flex; justify-content: space-between; color: white; font-size: 13px;">
+            <span>Sound FX</span>
+            <input type="checkbox" checked>
+          </label>
+        </div>
+        <button id="closeSettings" class="primary-button">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="app-header">
+    <div class="app-title">
+      <img src="assets/nimbusblockslogo.png" alt="Nimbus Blocks" class="header-logo">
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <div class="app-card">
+
+      <!-- Stats Panel: shows Level and Lines -->
+      <section class="glass-panel stats-panel" aria-label="Game Stats">
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-label">LEVEL</div>
+            <div id="level" class="stat-value">1</div>
+          </div>
+          <div class="divider"></div>
+          <div class="stat-item">
+            <div class="stat-label">LINES</div>
+            <div id="lines" class="stat-value">0</div>
+          </div>
+        </div>
+      </section>
+
+      <main class="app-main">
+        <!-- LEFT COLUMN: HOLD -->
+        <aside class="side-panel">
+          <section class="glass-panel next-panel">
+            <h2>HOLD</h2>
+            <canvas id="holdPiece" width="144" height="144"></canvas>
+            <p class="small-hint">Shift</p>
+          </section>
+        </aside>
+
+        <!-- CENTER COLUMN: BOARD -->
+        <section class="playfield-card">
+          <div class="game-container">
+            <canvas id="tetris"></canvas>
+
+            <div class="brand-watermark">
+              <img src="assets/nimbusblockslogo.png" alt="">
+            </div>
+
+            <!-- Overlays -->
+            <div class="overlay" id="startOverlay">
+              <div class="overlay-content">
+                <h2>Nimbus Block</h2>
+                <div class="glow-text">VERSION 2.0</div>
+                <p>Pentomino Puzzle Adventure</p>
+                <div class="menu-buttons">
+                  <button id="startButton" class="primary-button" type="button">PLAY</button>
+                  <button id="instructionsButton" class="pill" type="button"
+                    style="margin-top: 8px;">INSTRUCTIONS</button>
+                  <button id="helpButton" class="pill" type="button" style="margin-top: 4px;">HELP</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="overlay hidden" id="gameOverOverlay">
+              <div class="overlay-content">
+                <h2>Game Over</h2>
+                <p>The flow has stopped.</p>
+                <button class="pill" type="button" onclick="location.reload()">Try Again</button>
+              </div>
+            </div>
+
+            <div class="overlay hidden" id="pauseOverlay">
+              <div class="overlay-content">
+                <h2>Paused</h2>
+                <div class="menu-buttons">
+                  <button id="resumeButton" class="primary-button" type="button" style="width: 100%;">RESUME</button>
+                  <button id="quitButton" class="pill" type="button"
+                    style="margin-top: 12px; width: 100%;">QUIT</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="overlay hidden" id="instructionsOverlay">
+              <div class="overlay-content">
+                <h2>Instructions</h2>
+                <div class="controls-hint" style="grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px;">
+                  <p>← → Move Piece</p>
+                  <p>↑ Rotate Piece</p>
+                  <p>↓ Soft Drop</p>
+                  <p>SPACE Hard Drop</p>
+                  <p>SHIFT Hold Piece</p>
+                  <p>C Hold Piece</p>
+                </div>
+                <button id="backFromInstructions" class="primary-button" type="button">Back</button>
+              </div>
+            </div>
+
+            <div class="overlay hidden" id="helpOverlay">
+              <div class="overlay-content">
+                <h2>Help</h2>
+                <p style="font-size: 13px; margin-bottom: 16px; color: #475569;">
+                  Clear lines to score points and level up.<br>
+                  Game speeds up every 10 lines.
+                </p>
+                <div class="controls-hint" style="grid-template-columns: 1fr; margin-bottom: 20px;">
+                  <p>1 Line: 100 x Level</p>
+                  <p>2 Lines: 300 x Level</p>
+                  <p>3 Lines: 500 x Level</p>
+                  <p>4 Lines: 800 x Level</p>
+                </div>
+                <button id="backFromHelp" class="primary-button" type="button">Back</button>
+              </div>
+            </div>
+
+
+          </div>
+        </section>
+
+        <!-- RIGHT COLUMN: NEXT & SCORE -->
+        <aside class="side-panel">
+          <section class="glass-panel metric">
+            <h2>SCORE</h2>
+            <div id="score" class="metric-value">0</div>
+          </section>
+
+          <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+            <button id="pauseButton" class="primary-button"
+              style="flex: 1; margin: 0; min-width: 0; padding: 12px 8px; font-size: 13px;" type="button">
+              PAUSE
+            </button>
+            <button id="muteButton" class="primary-button"
+              style="flex: 1; margin: 0; min-width: 0; padding: 12px 8px; font-size: 13px;" type="button">
+              MUTE
+            </button>
+          </div>
+
+          <section class="glass-panel next-panel">
+            <h2>NEXT</h2>
+            <canvas id="nextPiece"></canvas>
+          </section>
+        </aside>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    /* ---------------- JS START ---------------- */
+
+    // --- PIECES MODULE ---
+    const PIECES = {};
+    // 5 easy-to-merge shapes (different from classic Tetris I/O/T/S/Z/J/L)
+    const RAW_SHAPES = {
+      "square": [[1, 1, 0, 0, 0], [1, 1, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
+      "corner": [[1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
+      "step": [[0, 1, 1, 0, 0], [1, 1, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
+      "tower": [[0, 1, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
+      "plus": [[0, 0, 1, 0, 0], [0, 1, 1, 1, 0], [0, 0, 1, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
+    };
+    const PALETTE = {
+      "square": "#4ade80", "corner": "#38bdf8", "step": "#fbbf24", "tower": "#a78bfa", "plus": "#f472b6"
+    };
+    const COLORS = {};
+
+    function rotateMatrix(matrix) {
+      const N = matrix.length;
+      const res = matrix.map(row => [...row]);
+      for (let i = 0; i < N / 2; i++) {
+        for (let j = i; j < N - i - 1; j++) {
+          const temp = res[i][j];
+          res[i][j] = res[N - 1 - j][i];
+          res[N - 1 - j][i] = res[N - 1 - i][N - 1 - j];
+          res[N - 1 - i][N - 1 - j] = res[j][N - 1 - i];
+          res[j][N - 1 - i] = temp;
+        }
+      }
+      return res;
+    }
+    Object.keys(RAW_SHAPES).forEach(key => {
+      const rot0 = RAW_SHAPES[key];
+      const rot90 = rotateMatrix(rot0);
+      const rot180 = rotateMatrix(rot90);
+      const rot270 = rotateMatrix(rot180);
+      PIECES[key] = [rot0, rot90, rot180, rot270];
+      COLORS[key] = PALETTE[key] || "#94a3b8";
+    });
+
+    // --- MISSIONS MODULE ---
+
+
+    // --- AUDIO MODULE ---
+    class AudioSystem {
+      constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+        this.musicNodes = [];
+        this.musicIntervalId = null;
+        this.isMuted = false;
+        this.initialized = false;
+        this.bgm = null;
+      }
+
+      init() {
+        if (this.initialized) return;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.ctx = new AudioContext();
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.value = 0.35;
+        this.masterGain.connect(this.ctx.destination);
+        this.initialized = true;
+      }
+
+      startMusic() {
+        if (!this.bgm) {
+          this.bgm = new Audio("assets/Falling Blocks Fever.mp3");
+          this.bgm.loop = true;
+          this.bgm.volume = 0.4; // Adjust volume as needed
+        }
+        this.bgm.play().catch(e => console.warn("Audio play failed (user interaction needed first):", e));
+      }
+
+      stopMusic() {
+        if (this.bgm) {
+          this.bgm.pause();
+        }
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.bgm) {
+          this.bgm.muted = this.isMuted;
+        }
+        return this.isMuted;
+      }
+
+      playSound(type) {
+        if (!this.initialized || this.isMuted) return;
+        if (this.ctx.state === "suspended") this.ctx.resume();
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+
+        switch (type) {
+          case "move":
+            osc.frequency.setValueAtTime(200, t);
+            osc.frequency.exponentialRampToValueAtTime(50, t + 0.05);
+            gain.gain.setValueAtTime(0.05, t);
+            gain.gain.linearRampToValueAtTime(0, t + 0.05);
+            osc.start(t);
+            osc.stop(t + 0.05);
+            break;
+          case "rotate":
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(600, t);
+            osc.frequency.linearRampToValueAtTime(800, t + 0.1);
+            gain.gain.setValueAtTime(0.05, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+            osc.start(t);
+            osc.stop(t + 0.1);
+            break;
+          case "land":
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(100, t);
+            osc.frequency.exponentialRampToValueAtTime(40, t + 0.1);
+            gain.gain.setValueAtTime(0.2, t);
+            gain.gain.linearRampToValueAtTime(0, t + 0.1);
+            osc.start(t);
+            osc.stop(t + 0.1);
+            break;
+          case "clear":
+            this.playTone(523.25, t, 0.4);
+            this.playTone(659.25, t + 0.1, 0.4);
+            this.playTone(783.99, t + 0.2, 0.4);
+            break;
+          case "level_up":
+            this.playTone(440, t, 0.6, "square");
+            this.playTone(880, t + 0.1, 0.6, "sine");
+            this.playTone(1760, t + 0.2, 0.8, "sine");
+            break;
+          case "gameover":
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(150, t);
+            osc.frequency.linearRampToValueAtTime(50, t + 1.5);
+            gain.gain.setValueAtTime(0.3, t);
+            gain.gain.linearRampToValueAtTime(0, t + 1.5);
+            osc.start(t);
+            osc.stop(t + 1.5);
+            break;
+        }
+      }
+
+      playTone(freq, time, dur, type = "sine") {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+        gain.gain.setValueAtTime(0.1, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+        osc.start(time);
+        osc.stop(time + dur);
+      }
+    }
+    const audio = new AudioSystem();
+
+    // --- UI MODULE ---
+    class UI {
+      constructor(game) {
+        this.game = game;
+        this.scoreEl = document.getElementById("score");
+        this.levelEl = document.getElementById("level");
+        this.linesEl = document.getElementById("lines");
+        this.screens = {
+          start: document.getElementById("startOverlay"),
+          gameOver: document.getElementById("gameOverOverlay"),
+          pause: document.getElementById("pauseOverlay"),
+          instructions: document.getElementById("instructionsOverlay"),
+          help: document.getElementById("helpOverlay")
+        };
+        this.showScreen("start");
+      }
+
+      updateHUD(state) {
+        if (state.score !== undefined && this.scoreEl) {
+          this.scoreEl.textContent = state.score.toLocaleString();
+        }
+        if (state.level !== undefined && this.levelEl) {
+          this.levelEl.textContent = state.level;
+        }
+        if (state.lines !== undefined && this.linesEl) {
+          this.linesEl.textContent = state.lines;
+        }
+      }
+
+      showScreen(name) {
+        Object.values(this.screens).forEach(el => {
+          if (el) el.classList.add("hidden");
+        });
+        const target = this.screens[name];
+        if (target) target.classList.remove("hidden");
+      }
+
+      hideScreens() {
+        Object.values(this.screens).forEach(el => {
+          if (el) el.classList.add("hidden");
+        });
+      }
+    }
+
+    // --- GAME MODULE ---
+    const COLS = 12;
+    const ROWS = 22;
+    const BLOCK_SIZE = 24;
+
+    class Game {
+      constructor() {
+        this.canvas = document.getElementById("tetris");
+        this.ctx = this.canvas.getContext("2d");
+        this.nextCanvas = document.getElementById("nextPiece");
+        this.nextCtx = this.nextCanvas.getContext("2d");
+        this.holdCanvas = document.getElementById("holdPiece");
+        this.holdCtx = this.holdCanvas ? this.holdCanvas.getContext("2d") : null;
+
+        this.resizeCanvas();
+
+        this.ui = new UI(this);
+        // Missions removed for Marathon mode
+        // this.missions = new MissionSystem();
+
+        this.arena = this.createMatrix(COLS, ROWS);
+
+        this.player = {
+          pos: { x: 0, y: 0 },
+          matrix: null,
+          color: null,
+          shapeId: null,
+          pieceQ: [],
+          hold: null,
+          canHold: true,
+          didRotate: false
+        };
+
+        this.refillQueue();
+        this.renderPos = { x: 0, y: 0 };
+        this.score = 0;
+        this.segmentsCleared = 0;
+        this.dropCounter = 0;
+        this.dropInterval = 1000;
+        this.lastTime = 0;
+        this.isRunning = false;
+        this.isPaused = false;
+
+        this.inputHandler = this.handleInput.bind(this);
+        document.addEventListener("keydown", this.inputHandler);
+
+        const pauseBtn = document.getElementById("pauseButton");
+        if (pauseBtn) {
+          pauseBtn.addEventListener("click", () => {
+            if (this.isRunning) {
+              this.togglePause();
+              pauseBtn.textContent = this.isPaused ? "RESUME" : "PAUSE";
+            }
+          });
+        }
+
+        const startBtn = document.getElementById("startButton");
+        if (startBtn) {
+          startBtn.addEventListener("click", () => {
+            console.log("Start Clicked");
+            this.start();
+          });
+        }
+
+        // Start Screen Logic
+        const startScreen = document.getElementById("startScreen");
+        const appShell = document.querySelector(".app-shell");
+        const appHeader = document.querySelector(".app-header");
+        const mainStartBtn = document.getElementById("mainStartBtn");
+
+        mainStartBtn.addEventListener("click", () => {
+          startScreen.style.display = "none";
+          appShell.style.display = "block";
+          if (appHeader) appHeader.style.display = "flex"; // Show game banner
+        });
+
+        // Helper to show/hide overlays on Start Screen
+        function toggleOverlay(id, show) {
+          const el = document.getElementById(id);
+          if (el) {
+            if (show) el.classList.remove("hidden");
+            else el.classList.add("hidden");
+          }
+        }
+
+        document.getElementById("btnMissions")?.addEventListener("click", () => toggleOverlay("missionsOverlay", true));
+        document.getElementById("closeMissions")?.addEventListener("click", () => toggleOverlay("missionsOverlay", false));
+
+        document.getElementById("btnDaily")?.addEventListener("click", () => toggleOverlay("dailyOverlay", true));
+        document.getElementById("closeDaily")?.addEventListener("click", () => toggleOverlay("dailyOverlay", false));
+
+        document.getElementById("btnSettings")?.addEventListener("click", () => toggleOverlay("settingsOverlay", true));
+        document.getElementById("closeSettings")?.addEventListener("click", () => toggleOverlay("settingsOverlay", false));
+
+        // Global Music Toggle (Mock)
+        window.toggleMusic = (checkbox) => {
+          if (checkbox.checked) {
+            // Audio enabled (default)
+          } else {
+            audio.stopMusic();
+          }
+        };
+
+        document.getElementById("instructionsButton")?.addEventListener("click", () => this.ui.showScreen("instructions"));
+        document.getElementById("helpButton")?.addEventListener("click", () => this.ui.showScreen("help"));
+        document.getElementById("backFromInstructions")?.addEventListener("click", () => this.ui.showScreen("start"));
+        document.getElementById("backFromHelp")?.addEventListener("click", () => this.ui.showScreen("start"));
+
+        document.getElementById("muteButton")?.addEventListener("click", (e) => {
+          const muted = audio.toggleMute();
+          e.target.textContent = muted ? "UNMUTE" : "MUTE";
+        });
+        document.getElementById("resumeButton")?.addEventListener("click", () => this.togglePause());
+        document.getElementById("quitButton")?.addEventListener("click", () => this.quit());
+      }
+
+      resizeCanvas() {
+        this.canvas.width = COLS * BLOCK_SIZE;
+        this.canvas.height = ROWS * BLOCK_SIZE;
+        this.canvas.style.width = `${COLS * BLOCK_SIZE}px`;
+        this.canvas.style.height = `${ROWS * BLOCK_SIZE}px`;
+
+        this.nextCanvas.width = 6 * BLOCK_SIZE;
+        this.nextCanvas.height = 11 * BLOCK_SIZE; // Reduced to fit 2 pieces better
+      }
+
+      createMatrix(w, h) {
+        const m = [];
+        while (h--) m.push(new Array(w).fill(0));
+        return m;
+      }
+
+      start() {
+        try {
+          this.arena.forEach(row => row.fill(0));
+          this.score = 0;
+          this.level = 1;
+          this.lines = 0;
+          this.linesToNextLevel = 10;
+          this.segmentsCleared = 0;
+          this.dropInterval = 1000;
+          this.isRunning = true;
+          this.isPaused = false;
+
+          // this.missions = new MissionSystem();
+          this.player.pieceQ = [];
+          this.player.hold = null;
+          this.player.canHold = true;
+          this.refillQueue();
+
+          this.spawnPiece();
+          this.ui.hideScreens();
+          this.ui.updateHUD({ score: 0, level: this.level, lines: 0 });
+          this.drawQueue();
+
+          try {
+            audio.startMusic();
+            // audio.playSound("mission_complete");
+          } catch (e) { console.warn(e); }
+
+          this.update();
+        } catch (e) { console.error(e); }
+      }
+
+      refillQueue() {
+        const shapes = Object.keys(PIECES);
+        while (this.player.pieceQ.length < 5) {
+          const shapeId = shapes[Math.floor(Math.random() * shapes.length)];
+          this.player.pieceQ.push({
+            shapeId,
+            rotations: PIECES[shapeId],
+            color: COLORS[shapeId]
+          });
+        }
+      }
+
+      spawnPiece() {
+        const next = this.player.pieceQ.shift();
+        this.refillQueue();
+
+        this.player.matrix = next.rotations[0];
+        this.player.rotations = next.rotations;
+        this.player.rotIndex = 0;
+        this.player.color = next.color;
+        this.player.shapeId = next.shapeId;
+
+        this.player.pos.y = 0;
+        this.player.pos.x = (this.arena[0].length / 2 | 0) - (this.player.matrix[0].length / 2 | 0);
+
+        this.renderPos.x = this.player.pos.x;
+        this.renderPos.y = this.player.pos.y;
+        this.player.didRotate = false;
+        this.player.canHold = true;
+
+        if (this.collide(this.arena, this.player)) {
+          this.gameOver();
+        }
+        this.drawQueue();
+      }
+
+      collide(arena, player) {
+        const [m, o] = [player.matrix, player.pos];
+        for (let y = 0; y < m.length; ++y) {
+          for (let x = 0; x < m[y].length; ++x) {
+            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      merge(arena, player) {
+        player.matrix.forEach((row, y) => {
+          row.forEach((value, x) => {
+            if (value !== 0) {
+              arena[y + player.pos.y][x + player.pos.x] = { color: player.color, shapeId: player.shapeId };
+            }
+          });
+        });
+        audio.playSound("land");
+        if (this.checkClears()) return;
+      }
+
+      rotate(dir) {
+        const pos = this.player.pos.x;
+        let offset = 1;
+        const nextIdx = (this.player.rotIndex + dir + 4) % 4;
+        const nextMatrix = this.player.rotations[nextIdx];
+        const oldMatrix = this.player.matrix;
+        this.player.matrix = nextMatrix;
+        while (this.collide(this.arena, this.player)) {
+          this.player.pos.x += offset;
+          offset = -(offset + (offset > 0 ? 1 : -1));
+          if (offset > this.player.matrix[0].length) {
+            this.player.matrix = oldMatrix;
+            this.player.pos.x = pos;
+            return;
+          }
+        }
+        this.player.rotIndex = nextIdx;
+        this.player.didRotate = true;
+        audio.playSound("rotate");
+      }
+
+      move(dir) {
+        this.player.pos.x += dir;
+        if (this.collide(this.arena, this.player)) {
+          this.player.pos.x -= dir;
+        } else {
+          audio.playSound("move");
+        }
+      }
+
+      drop() {
+        this.player.pos.y++;
+        if (this.collide(this.arena, this.player)) {
+          this.player.pos.y--;
+          this.merge(this.arena, this.player);
+          // Check clears is called inside merge for scoring logic, but if not:
+          // merge calls checkClears which calls spawnPiece
+          // We need to ensure we don't spawn twice.
+          // The original code called checkClears then spawnPiece.
+          // Let's stick to original flow but wrapped in merge?
+          // Wait, original drop() called merge, then checkClears, then spawnPiece.
+          // merge() in original code:
+          //  ...
+          //  if (this.checkMission(this.missions.onPieceLock(player.didRotate))) return;
+          // It missed calling checkClears in merge!
+          // Ah, drop() called merge, then checkClears, then spawnPiece.
+          // BUT input space hardDrop ALSO does this.
+          // So merge() just places blocks.
+
+          this.checkClears();
+          this.spawnPiece();
+        }
+        this.dropCounter = 0;
+      }
+
+      hardDrop() {
+        while (!this.collide(this.arena, this.player)) {
+          this.player.pos.y++;
+        }
+        this.player.pos.y--;
+        this.merge(this.arena, this.player);
+        this.checkClears();
+        this.spawnPiece();
+      }
+
+      holdPiece() {
+        if (!this.player.canHold) return;
+        const current = {
+          shapeId: this.player.shapeId,
+          rotations: this.player.rotations,
+          color: this.player.color
+        };
+        if (!this.player.hold) {
+          this.player.hold = current;
+          this.spawnPiece();
+        } else {
+          const swap = this.player.hold;
+          this.player.hold = current;
+          this.player.matrix = swap.rotations[0];
+          this.player.rotations = swap.rotations;
+          this.player.rotIndex = 0;
+          this.player.color = swap.color;
+          this.player.shapeId = swap.shapeId;
+          this.player.pos.y = 0;
+          this.player.pos.x = (this.arena[0].length / 2 | 0) - (this.player.matrix[0].length / 2 | 0);
+          this.player.didRotate = false;
+        }
+        this.player.canHold = false;
+        this.drawHold();
+      }
+
+      checkClears() {
+        let linesCleared = 0;
+
+        // Iterate from bottom to top
+        outer: for (let y = this.arena.length - 1; y > 0; --y) {
+          for (let x = 0; x < this.arena[y].length; ++x) {
+            if (this.arena[y][x] === 0) {
+              continue outer;
+            }
+          }
+
+          const row = this.arena.splice(y, 1)[0].fill(0);
+          this.arena.unshift(row);
+          ++y;
+          linesCleared++;
+        }
+
+        if (linesCleared > 0) {
+          audio.playSound("clear");
+
+          // Marathon Scoring
+          const baseScores = [0, 100, 300, 500, 800]; // 0, 1, 2, 3, 4 lines
+          const scoreIncrease = (baseScores[linesCleared] || (linesCleared * 200)) * this.level;
+          this.score += scoreIncrease;
+          this.lines += linesCleared;
+
+          // Level Up
+          if (this.lines >= this.level * 10) {
+            this.level++;
+            audio.playSound("level_up");
+            // Speed up
+            let newInterval = 1000 - (this.level - 1) * 100;
+            if (newInterval < 50) newInterval = 50;
+            this.dropInterval = newInterval;
+          }
+
+          this.ui.updateHUD({ score: this.score, level: this.level, lines: this.lines });
+        }
+      }
+
+      gameOver() {
+        this.isRunning = false;
+        audio.playSound("gameover");
+        audio.stopMusic();
+        this.ui.showScreen("gameOver");
+      }
+
+      quit() {
+        this.isRunning = false;
+        this.isPaused = false;
+        audio.stopMusic();
+
+        // Hide game shell, show start screen
+        document.querySelector(".app-shell").style.display = "none";
+        const appHeader = document.querySelector(".app-header");
+        if (appHeader) appHeader.style.display = "none"; // Hide game banner
+        document.getElementById("startScreen").style.display = "flex";
+
+        // Also reset internal UI state just in case
+        this.ui.hideScreens();
+        document.getElementById("startOverlay").classList.remove("hidden"); // Reset for next time
+      }
+
+      togglePause() {
+        if (!this.isRunning) return;
+        this.isPaused = !this.isPaused;
+        if (this.isPaused) {
+          this.ui.showScreen("pause");
+          audio.stopMusic();
+        } else {
+          this.ui.hideScreens();
+          audio.startMusic();
+        }
+      }
+
+      update(time = 0) {
+        if (!this.isRunning || this.isPaused) {
+          this.lastTime = time;
+          requestAnimationFrame(this.update.bind(this));
+          return;
+        }
+
+        const deltaTime = time - this.lastTime;
+        this.lastTime = time;
+        this.dropCounter += deltaTime;
+
+        // if (this.missions.updateTime()) {
+        //   this.checkMission(true);
+        // }
+        // this.ui.updateHUD({ mission: this.missions.activeMission });
+
+        if (this.dropCounter > this.dropInterval) {
+          this.drop();
+        }
+
+        const lerpSpeed = 0.2;
+        this.renderPos.x += (this.player.pos.x - this.renderPos.x) * lerpSpeed;
+        this.renderPos.y += (this.player.pos.y - this.renderPos.y) * lerpSpeed;
+
+        this.draw();
+        requestAnimationFrame(this.update.bind(this));
+      }
+
+      draw() {
+        this.ctx.fillStyle = "#020617";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        for (let i = 0; i <= COLS; i++) {
+          this.ctx.moveTo(i * BLOCK_SIZE, 0);
+          this.ctx.lineTo(i * BLOCK_SIZE, this.canvas.height);
+        }
+        for (let i = 0; i <= ROWS; i++) {
+          this.ctx.moveTo(0, i * BLOCK_SIZE);
+          this.ctx.lineTo(this.canvas.width, i * BLOCK_SIZE);
+        }
+        this.ctx.stroke();
+
+        this.drawMatrix(this.arena, { x: 0, y: 0 });
+
+        if (this.player.matrix) {
+          this.drawMatrix(this.player.matrix, this.renderPos, this.player.color);
+        }
+      }
+
+      drawQueue() {
+        this.nextCtx.fillStyle = "#0f172a";
+        this.nextCtx.fillRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
+        let yOffset = 1;
+        this.player.pieceQ.slice(0, 2).forEach(piece => {
+          const matrix = piece.rotations[0];
+          const xOffset = (6 - matrix[0].length) / 2;
+          this.drawMatrixOnCtx(this.nextCtx, matrix, { x: xOffset, y: yOffset }, piece.color);
+          yOffset += 5;
+        });
+      }
+
+      drawHold() {
+        if (!this.holdCtx) return;
+        this.holdCtx.fillStyle = "#0f172a";
+        this.holdCtx.fillRect(0, 0, this.holdCanvas.width, this.holdCanvas.height);
+        if (this.player.hold) {
+          const matrix = this.player.hold.rotations[0];
+          const xOffset = (6 - matrix[0].length) / 2;
+          const yOffset = (6 - matrix.length) / 2;
+          this.drawMatrixOnCtx(this.holdCtx, matrix, { x: xOffset, y: yOffset }, this.player.hold.color);
+        }
+      }
+
+      drawMatrix(matrix, offset, overrideColor = null) {
+        this.drawMatrixOnCtx(this.ctx, matrix, offset, overrideColor);
+      }
+
+      drawMatrixOnCtx(ctx, matrix, offset, overrideColor = null) {
+        matrix.forEach((row, y) => {
+          row.forEach((value, x) => {
+            if (value !== 0) {
+              const color = overrideColor || (typeof value === 'object' ? value.color : value);
+              if (color) {
+                this.drawGlassBlock(ctx, (x + offset.x) * BLOCK_SIZE, (y + offset.y) * BLOCK_SIZE, color);
+              }
+            }
+          });
+        });
+      }
+
+      drawGlassBlock(ctx, x, y, color) {
+        const size = BLOCK_SIZE;
+        const pad = 1.5;
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.85;
+        ctx.fillRect(x + pad, y + pad, size - pad * 2, size - pad * 2);
+        ctx.globalAlpha = 1.0;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 8;
+        const grad = ctx.createLinearGradient(x, y, x, y + size);
+        grad.addColorStop(0, "rgba(255,255,255,0.7)");
+        grad.addColorStop(0.4, "rgba(255,255,255,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(x + pad, y + pad, size - pad * 2, size / 2);
+        ctx.strokeStyle = "rgba(255,255,255,0.3)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + pad, y + pad, size - pad * 2, size - pad * 2);
+        ctx.restore();
+      }
+
+      handleInput(event) {
+        const gameKeys = ["ArrowLeft", "ArrowRight", "ArrowDown", "ArrowUp", "Space", "KeyC", "ShiftLeft"];
+        if (gameKeys.includes(event.code)) {
+          event.preventDefault();
+        }
+        if (!this.isRunning || this.isPaused) return;
+        switch (event.code) {
+          case "ArrowLeft": this.move(-1); break;
+          case "ArrowRight": this.move(1); break;
+          case "ArrowDown": this.drop(); break;
+          case "ArrowUp": this.rotate(1); break;
+          case "Space": this.hardDrop(); break;
+          case "KeyC":
+          case "ShiftLeft":
+            this.holdPiece();
+            break;
+        }
+      }
+    }
+
+    // Initial Launch
+    const game = new Game();
+  </script>
+</body>
+
+</html>
