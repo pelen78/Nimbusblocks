@@ -41,7 +41,7 @@
     .nimbus-orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
+      filter: blur(50px);
       opacity: 0.15;
       /* Very subtle */
       animation: float-orb 20s infinite ease-in-out alternate;
@@ -159,9 +159,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      /* Animation: Float removed/adjusted as it might look weird on a full width banner. 
-         Let's keep the logo floating inside optionally, or just static banner. 
-         User said "atraviese de un lado a otro". Usually static. 
+      /* Animation: Float removed/adjusted as it might look weird on a full width banner.
+         Let's keep the logo floating inside optionally, or just static banner.
+         User said "atraviese de un lado a otro". Usually static.
          Let's remove the float from container. */
     }
 
@@ -179,6 +179,7 @@
       letter-spacing: -0.02em;
       background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 8px;
     }
@@ -220,8 +221,8 @@
     }
 
     .start-btn:hover {
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 20px 30px rgba(99, 102, 241, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
     }
 
     .start-btn:hover::after {
@@ -236,21 +237,32 @@
     }
 
     .sec-btn {
-      background: rgba(255, 255, 255, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      padding: 10px 20px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #e0f2fe, #bfdbfe);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.6);
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
       font-size: 13px;
       font-weight: 600;
-      color: #475569;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #0f172a;
       cursor: pointer;
       backdrop-filter: blur(4px);
+      /* Optional, but keeps glass feel if gradient is semi-transparent? Gradient is opaque here. */
       transition: all 0.2s;
     }
 
     .sec-btn:hover {
-      background: rgba(255, 255, 255, 0.6);
+      background: linear-gradient(135deg, #dbeafe, #a5b4fc);
       transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.8);
+    }
+
+    .sec-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 0 0 0.7px rgba(148, 163, 184, 0.9), 0 6px 14px rgba(148, 163, 184, 0.9);
     }
 
     @keyframes float {
@@ -322,7 +334,7 @@
     }
 
     .app-header::after {
-      /* Remove shimmer from this banner style to keep it clean, or keep it subtle? 
+      /* Remove shimmer from this banner style to keep it clean, or keep it subtle?
           User didn't explicitly ask to remove shimmer, but full width shimmer might be distracting.
           Let's remove the ::after pseudo-element for now or reset it to none. */
       content: none;
@@ -446,31 +458,7 @@
       flex-shrink: 0;
     }
 
-    .brand-watermark {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      width: 60px;
-      /* Increased size for better visibility */
-      height: 60px;
-      overflow: hidden;
-      opacity: 0.22;
-      /* 18-25% range */
-      pointer-events: none;
-      filter: grayscale(100%) brightness(200%);
-      /* White/soft look */
-      z-index: 5;
-      /* Below overlays but above board bg? No, overlaps board */
-    }
 
-    .brand-watermark img {
-      height: 100%;
-      width: auto;
-      max-width: none;
-      /* Adjust positioning to crop text if needed. Assuming icon is on left. */
-      object-fit: cover;
-      object-position: left center;
-    }
 
     /* Enhancements */
     .primary-button {
@@ -574,6 +562,8 @@
       letter-spacing: 0.16em;
       text-transform: uppercase;
       margin-bottom: 12px;
+      color: #e2e8f0;
+      /* Light gray for better visibility */
     }
 
     .glow-text {
@@ -660,15 +650,72 @@
         width: 320px;
         max-width: 100%;
         order: -1;
-        /* Keep board on top on mobile if desired, or let it flow naturally */
-      }
 
-      /* Order: Board first, then panels? Or panels then board? 
+        /* Keep board on top on mobile if desired, or let it flow naturally */
+
+
+
+        /* Order: Board first, then panels? Or panels then board?
          On mobile, maybe Score/Next on top, Board, then Hold?
          Let's keep natural order: Left (Hold), Center (Board), Right (Next).
          But flex direction column on app-main?
       */
 
+      }
+    }
+
+    /* Feedback Button (Global) */
+    .feedback-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      letter-spacing: 0.02em;
+    }
+
+    .feedback-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .feedback-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      opacity: 0.9;
+    }
+
+    /* Music Selection Active State */
+    .music-option {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 11px;
+      padding: 8px 4px;
+    }
+
+    .music-option.selected {
+      background: rgba(168, 85, 247, 0.2);
+      border-color: rgba(168, 85, 247, 0.5);
+      color: #e2e8f0;
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
     }
 
     /* ---------------- CSS END ---------------- */
@@ -683,6 +730,14 @@
     <div class="nimbus-grid"></div>
   </div>
 
+  <a href="#" class="feedback-btn" id="feedbackBtn">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z"
+        fill="currentColor" />
+    </svg>
+    Feedback
+  </a>
+
   <div id="startScreen">
     <div class="start-content">
       <div class="start-logo-container">
@@ -693,34 +748,21 @@
       <button id="mainStartBtn" class="start-btn">START GAME</button>
 
       <div class="secondary-options">
-        <button id="btnMissions" class="sec-btn">Missions</button>
         <button id="btnDaily" class="sec-btn">Daily Challenge</button>
         <button id="btnSettings" class="sec-btn">Settings</button>
       </div>
     </div>
 
     <!-- Menu Overlays (Initially Hidden) -->
-    <div class="overlay hidden" id="missionsOverlay"
-      style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);">
-      <div class="overlay-content">
-        <h2>Missions</h2>
-        <p style="color: #94a3b8; margin-bottom: 24px;">Campaign Coming Soon!</p>
-        <div class="controls-hint" style="grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px;">
-          <p>Mission 1: Clear 10 Lines (Locked)</p>
-          <p>Mission 2: Score 5000 (Locked)</p>
-          <p>Mission 3: Survive 5 mins (Locked)</p>
-        </div>
-        <button id="closeMissions" class="primary-button">Back</button>
-      </div>
-    </div>
+
 
     <div class="overlay hidden" id="dailyOverlay"
       style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);">
       <div class="overlay-content">
-        <h2>Daily Challenge</h2>
-        <div class="glow-text">TODAY'S GOAL</div>
+        <h2 style="color: #e2e8f0;">Daily Challenge</h2>
+        <div class="glow-text" style="color: #c084fc;">TODAY'S GOAL</div>
         <p style="color: #cbd5e1; margin-bottom: 24px; font-size: 14px;">Clear 40 Lines in under 3 minutes.</p>
-        <button class="pill" style="margin-bottom: 16px;">Start Challenge</button>
+        <button id="startChallengeBtn" class="pill" style="margin-bottom: 16px;">Start Challenge</button>
         <br>
         <button id="closeDaily" class="primary-button">Back</button>
       </div>
@@ -729,17 +771,47 @@
     <div class="overlay hidden" id="settingsOverlay"
       style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);">
       <div class="overlay-content">
-        <h2>Settings</h2>
+        <h2 style="color: #e2e8f0;">Settings</h2>
         <div class="controls-hint"
           style="grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; text-align: left;">
-          <label style="display: flex; justify-content: space-between; color: white; font-size: 13px;">
-            <span>Music</span>
-            <input type="checkbox" checked onchange="toggleMusic(this)">
+
+          <!-- Music Toggle -->
+          <label
+            style="display: flex; justify-content: space-between; color: #e2e8f0; font-size: 13px; align-items: center;">
+            <span style="font-weight: 600; letter-spacing: 0.05em;">BACKGROUND MUSIC</span>
+            <input type="checkbox" id="musicToggle" checked
+              onchange="audio.toggleMusic(); document.getElementById('musicToggle').checked = !audio.isMusicMuted;">
           </label>
-          <label style="display: flex; justify-content: space-between; color: white; font-size: 13px;">
-            <span>Sound FX</span>
-            <input type="checkbox" checked>
+
+          <!-- Sound Effects Toggle -->
+          <label
+            style="display: flex; justify-content: space-between; color: #e2e8f0; font-size: 13px; align-items: center;">
+            <span style="font-weight: 600; letter-spacing: 0.05em;">SOUND EFFECTS</span>
+            <input type="checkbox" id="soundToggle" checked
+              onchange="audio.toggleSound(); document.getElementById('soundToggle').checked = !audio.isSoundMuted;">
           </label>
+
+          <div class="divider" style="width: 100%; height: 1px; background: rgba(255,255,255,0.15); margin: 8px 0;">
+          </div>
+
+          <!-- Music Selection -->
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <span
+              style="color: #cbd5e1; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Background
+              Melody</span>
+            <div class="music-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+              <button class="pill music-option selected" onclick="selectMusic('melody1', this)">
+                Dreamy
+              </button>
+              <button class="pill music-option" onclick="selectMusic('melody2', this)">
+                Arcade
+              </button>
+              <button class="pill music-option" onclick="selectMusic('melody3', this)">
+                Focus
+              </button>
+            </div>
+          </div>
+
         </div>
         <button id="closeSettings" class="primary-button">Back</button>
       </div>
@@ -785,9 +857,7 @@
           <div class="game-container">
             <canvas id="tetris"></canvas>
 
-            <div class="brand-watermark">
-              <img src="assets/nimbusblockslogo.png" alt="">
-            </div>
+
 
             <!-- Overlays -->
             <div class="overlay" id="startOverlay">
@@ -795,11 +865,13 @@
                 <h2>Nimbus Block</h2>
                 <div class="glow-text">VERSION 2.0</div>
                 <p>Pentomino Puzzle Adventure</p>
-                <div class="menu-buttons">
-                  <button id="startButton" class="primary-button" type="button">PLAY</button>
-                  <button id="instructionsButton" class="pill" type="button"
-                    style="margin-top: 8px;">INSTRUCTIONS</button>
-                  <button id="helpButton" class="pill" type="button" style="margin-top: 4px;">HELP</button>
+                <div class="menu-buttons" style="display: flex; gap: 8px; justify-content: center; flex-wrap: nowrap;">
+                  <button id="startButton" class="primary-button" type="button"
+                    style="padding: 6px 14px; font-size: 11px;">PLAY</button>
+                  <button id="instructionsButton" class="primary-button" type="button"
+                    style="padding: 6px 14px; font-size: 11px;">INSTRUCTIONS</button>
+                  <button id="helpButton" class="primary-button" type="button"
+                    style="padding: 6px 14px; font-size: 11px;">HELP</button>
                 </div>
               </div>
             </div>
@@ -930,122 +1002,184 @@
     // --- MISSIONS MODULE ---
 
 
-    // --- AUDIO MODULE ---
+    // --- AUDIO SYSTEM ---
     class AudioSystem {
       constructor() {
+        // Web Audio Context for sound effects
         this.ctx = null;
         this.masterGain = null;
-        this.musicNodes = [];
-        this.musicIntervalId = null;
-        this.isMuted = false;
+        this.sfxGain = null;
         this.initialized = false;
-        this.bgm = null;
+
+        // HTML5 Audio for background music (avoids CORS issues with file://)
+        this.bgmAudio = null;
+        this.currentBgmAudio = null;
+        this.isMusicMuted = false;  // Separate mute state for music
+        this.isSoundMuted = false;  // Separate mute state for sound effects
+
+        // Sound Effects (will use Web Audio API)
+        this.sounds = {};
+
+        // Music Tracks Configuration
+        this.tracks = {
+          melody1: { name: "Dreamy", path: "assets/Falling Blocks Fever.mp3" },
+          melody2: { name: "Arcade", path: "assets/Falling Blocks, Rising Score.mp3" },
+          melody3: { name: "Focus", path: "assets/Thought Spiral.mp3" }
+        };
+        this.currentTrackId = localStorage.getItem("nimbus_music_track") || "melody1";
+
+        // Create the HTML5 audio element for music
+        this.bgmAudio = new Audio();
+        this.bgmAudio.loop = true;
+        this.bgmAudio.volume = 0.3; // 30% volume for music
+        console.log("AudioSystem constructor completed");
       }
 
       init() {
         if (this.initialized) return;
+
+        // Initialize Web Audio Context for sound effects only
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         this.ctx = new AudioContext();
+
+        // Master gain (controls overall SFX volume)
         this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.value = 0.35;
+        this.masterGain.gain.value = 0.5;
         this.masterGain.connect(this.ctx.destination);
+
+        // SFX gain (controls sound effects separately)
+        this.sfxGain = this.ctx.createGain();
+        this.sfxGain.gain.value = 0.5; // SFX at 50% of master
+        this.sfxGain.connect(this.masterGain);
+
         this.initialized = true;
+        console.log("AudioSystem initialized (Web Audio for SFX, HTML5 Audio for Music)");
+
+        // Apply mute states
+        if (this.isMusicMuted) {
+          this.bgmAudio.volume = 0;
+        }
+        if (this.isSoundMuted) {
+          this.sfxGain.gain.value = 0;
+        }
+      }
+
+      setMelody(trackId) {
+        if (!this.tracks[trackId]) return;
+        this.currentTrackId = trackId;
+        localStorage.setItem("nimbus_music_track", trackId);
+        console.log(`Melody changed to: ${this.tracks[trackId].name}`);
+
+        // Stop current music
+        this.stopMusic();
+
+        // If initialized and not muted, start the new track
+        if (this.initialized && !this.isMusicMuted) {
+          this.startMusic();
+        }
+      }
+
+      async loadSound(name, url) {
+        if (!this.ctx) return;
+        try {
+          const response = await fetch(url);
+          const arrayBuffer = await response.arrayBuffer();
+          const audioBuffer = await this.ctx.decodeAudioData(arrayBuffer);
+          this.sounds[name] = audioBuffer;
+          console.log(`Sound ${name} loaded`);
+        } catch (e) {
+          console.warn(`Sound ${name} failed to load`, e);
+        }
       }
 
       startMusic() {
-        if (!this.bgm) {
-          this.bgm = new Audio("assets/Falling Blocks Fever.mp3");
-          this.bgm.loop = true;
-          this.bgm.volume = 0.4; // Adjust volume as needed
+        console.log("startMusic() called");
+
+        const track = this.tracks[this.currentTrackId];
+        if (!track) {
+          console.error("Invalid track ID");
+          return;
         }
-        this.bgm.play().catch(e => console.warn("Audio play failed (user interaction needed first):", e));
+
+        console.log(`Loading music: ${track.name} from ${track.path}`);
+
+        // Set the source and play
+        this.bgmAudio.src = track.path;
+        this.bgmAudio.volume = this.isMusicMuted ? 0 : 0.3;
+
+        // Play the audio (returns a promise)
+        this.bgmAudio.play()
+          .then(() => {
+            console.log(`Music started playing: ${track.name}`);
+          })
+          .catch(err => {
+            console.error("Music playback failed:", err);
+          });
       }
 
       stopMusic() {
-        if (this.bgm) {
-          this.bgm.pause();
+        if (this.bgmAudio) {
+          this.bgmAudio.pause();
+          this.bgmAudio.currentTime = 0;
+          console.log("Music stopped");
         }
       }
 
+      toggleMusic() {
+        this.isMusicMuted = !this.isMusicMuted;
+
+        // Mute/unmute music
+        if (this.bgmAudio) {
+          this.bgmAudio.volume = this.isMusicMuted ? 0 : 0.3;
+        }
+
+        console.log(`Music ${this.isMusicMuted ? 'muted' : 'unmuted'}`);
+        return this.isMusicMuted;
+      }
+
+      toggleSound() {
+        this.isSoundMuted = !this.isSoundMuted;
+
+        // Mute/unmute SFX
+        if (this.sfxGain) {
+          this.sfxGain.gain.value = this.isSoundMuted ? 0 : 0.5;
+        }
+
+        console.log(`Sound effects ${this.isSoundMuted ? 'muted' : 'unmuted'}`);
+        return this.isSoundMuted;
+      }
+
+      // Legacy method for backwards compatibility
       toggleMute() {
-        this.isMuted = !this.isMuted;
-        if (this.bgm) {
-          this.bgm.muted = this.isMuted;
+        // Toggle both music and sound together
+        this.isMusicMuted = !this.isMusicMuted;
+        this.isSoundMuted = this.isMusicMuted;
+
+        // Apply to music
+        if (this.bgmAudio) {
+          this.bgmAudio.volume = this.isMusicMuted ? 0 : 0.3;
         }
-        return this.isMuted;
+
+        // Apply to SFX
+        if (this.sfxGain) {
+          this.sfxGain.gain.value = this.isSoundMuted ? 0 : 0.5;
+        }
+
+        console.log(`Audio ${this.isMusicMuted ? 'muted' : 'unmuted'}`);
+        return this.isMusicMuted;
       }
 
-      playSound(type) {
-        if (!this.initialized || this.isMuted) return;
-        if (this.ctx.state === "suspended") this.ctx.resume();
-        const t = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.masterGain);
+      // Play a sound effect
+      playSound(soundName) {
+        if (!this.initialized || !this.sounds[soundName] || this.isSoundMuted) return;
 
-        switch (type) {
-          case "move":
-            osc.frequency.setValueAtTime(200, t);
-            osc.frequency.exponentialRampToValueAtTime(50, t + 0.05);
-            gain.gain.setValueAtTime(0.05, t);
-            gain.gain.linearRampToValueAtTime(0, t + 0.05);
-            osc.start(t);
-            osc.stop(t + 0.05);
-            break;
-          case "rotate":
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(600, t);
-            osc.frequency.linearRampToValueAtTime(800, t + 0.1);
-            gain.gain.setValueAtTime(0.05, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-            osc.start(t);
-            osc.stop(t + 0.1);
-            break;
-          case "land":
-            osc.type = "triangle";
-            osc.frequency.setValueAtTime(100, t);
-            osc.frequency.exponentialRampToValueAtTime(40, t + 0.1);
-            gain.gain.setValueAtTime(0.2, t);
-            gain.gain.linearRampToValueAtTime(0, t + 0.1);
-            osc.start(t);
-            osc.stop(t + 0.1);
-            break;
-          case "clear":
-            this.playTone(523.25, t, 0.4);
-            this.playTone(659.25, t + 0.1, 0.4);
-            this.playTone(783.99, t + 0.2, 0.4);
-            break;
-          case "level_up":
-            this.playTone(440, t, 0.6, "square");
-            this.playTone(880, t + 0.1, 0.6, "sine");
-            this.playTone(1760, t + 0.2, 0.8, "sine");
-            break;
-          case "gameover":
-            osc.type = "sawtooth";
-            osc.frequency.setValueAtTime(150, t);
-            osc.frequency.linearRampToValueAtTime(50, t + 1.5);
-            gain.gain.setValueAtTime(0.3, t);
-            gain.gain.linearRampToValueAtTime(0, t + 1.5);
-            osc.start(t);
-            osc.stop(t + 1.5);
-            break;
-        }
-      }
-
-      playTone(freq, time, dur, type = "sine") {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = type;
-        osc.frequency.value = freq;
-        osc.connect(gain);
-        gain.connect(this.masterGain);
-        gain.gain.setValueAtTime(0.1, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-        osc.start(time);
-        osc.stop(time + dur);
+        const source = this.ctx.createBufferSource();
+        source.buffer = this.sounds[soundName];
+        source.connect(this.sfxGain);
+        source.start(0);
       }
     }
+
     const audio = new AudioSystem();
 
     // --- UI MODULE ---
@@ -1056,13 +1190,13 @@
         this.levelEl = document.getElementById("level");
         this.linesEl = document.getElementById("lines");
         this.screens = {
-          start: document.getElementById("startOverlay"),
+          start: document.getElementById("startOverlay"), // Needed to hide it on Game.start()
           gameOver: document.getElementById("gameOverOverlay"),
           pause: document.getElementById("pauseOverlay"),
           instructions: document.getElementById("instructionsOverlay"),
           help: document.getElementById("helpOverlay")
         };
-        this.showScreen("start");
+        // this.showScreen("start"); // Don't show start overlay, main start screen is default
       }
 
       updateHUD(state) {
@@ -1163,9 +1297,15 @@
         const mainStartBtn = document.getElementById("mainStartBtn");
 
         mainStartBtn.addEventListener("click", () => {
+          // Initialize audio on first user interaction (browser requirement)
+          if (!audio.initialized) {
+            audio.init();
+          }
+
           startScreen.style.display = "none";
-          appShell.style.display = "block";
-          if (appHeader) appHeader.style.display = "flex"; // Show game banner
+          appShell.style.display = "flex";
+          appHeader.style.display = "flex";
+          this.start();
         });
 
         // Helper to show/hide overlays on Start Screen
@@ -1177,24 +1317,77 @@
           }
         }
 
-        document.getElementById("btnMissions")?.addEventListener("click", () => toggleOverlay("missionsOverlay", true));
-        document.getElementById("closeMissions")?.addEventListener("click", () => toggleOverlay("missionsOverlay", false));
+
+
 
         document.getElementById("btnDaily")?.addEventListener("click", () => toggleOverlay("dailyOverlay", true));
         document.getElementById("closeDaily")?.addEventListener("click", () => toggleOverlay("dailyOverlay", false));
 
-        document.getElementById("btnSettings")?.addEventListener("click", () => toggleOverlay("settingsOverlay", true));
+        // Start Challenge button
+        document.getElementById("startChallengeBtn")?.addEventListener("click", () => {
+          toggleOverlay("dailyOverlay", false);
+          startScreen.style.display = "none";
+          appShell.style.display = "flex";
+          appHeader.style.display = "flex";
+
+          // Initialize audio if needed
+          if (!audio.initialized) {
+            audio.init();
+          }
+
+          // Start game in challenge mode
+          game.startChallenge();
+        });
+
+        document.getElementById("btnSettings")?.addEventListener("click", () => {
+          // Initialize audio on first interaction (required for browser autoplay policy)
+          if (!audio.initialized) {
+            audio.init();
+          }
+
+          // Initialize/Update UI state
+          const toggle = document.getElementById("musicToggle");
+          if (toggle) toggle.checked = !audio.isMuted;
+
+          // Update selected music
+          document.querySelectorAll(".music-option").forEach(btn => btn.classList.remove("selected"));
+          const current = audio.currentTrackId;
+          // Find button index
+          const btns = document.querySelectorAll(".music-option"); // Assuming 0=melody1, 1=melody2... or use data attribute logic
+          if (current === 'melody1') btns[0].classList.add("selected");
+          else if (current === 'melody2') btns[1].classList.add("selected");
+          else if (current === 'melody3') btns[2].classList.add("selected");
+
+          toggleOverlay("settingsOverlay", true);
+        });
         document.getElementById("closeSettings")?.addEventListener("click", () => toggleOverlay("settingsOverlay", false));
 
-        // Global Music Toggle (Mock)
-        window.toggleMusic = (checkbox) => {
-          if (checkbox.checked) {
-            // Audio enabled (default)
-          } else {
-            audio.stopMusic();
+        // Global helpers
+        window.selectMusic = (id, el) => {
+          // Update UI
+          document.querySelectorAll(".music-option").forEach(btn => btn.classList.remove("selected"));
+          el.classList.add("selected");
+
+          // Set melody (this will stop current and load new track)
+          audio.setMelody(id);
+
+          // If audio is initialized and not muted, start playing the preview
+          if (audio.initialized && !audio.isMuted) {
+            audio.startMusic();
           }
         };
 
+        // Global Music Toggle
+        window.toggleMusic = (checkbox) => {
+          if (checkbox.checked) {
+            if (audio.isMuted) audio.toggleMute();
+            if (!audio.bgmSource && audio.initialized) audio.startMusic();
+          } else {
+            if (!audio.isMuted) audio.toggleMute();
+          }
+        };
+
+        // UI Event Listeners
         document.getElementById("instructionsButton")?.addEventListener("click", () => this.ui.showScreen("instructions"));
         document.getElementById("helpButton")?.addEventListener("click", () => this.ui.showScreen("help"));
         document.getElementById("backFromInstructions")?.addEventListener("click", () => this.ui.showScreen("start"));
@@ -1254,6 +1447,99 @@
 
           this.update();
         } catch (e) { console.error(e); }
+      }
+
+      startChallenge() {
+        try {
+          // Reset game state
+          this.arena.forEach(row => row.fill(0));
+          this.score = 0;
+          this.level = 1;
+          this.lines = 0;
+          this.linesToNextLevel = 10;
+          this.segmentsCleared = 0;
+          this.dropInterval = 1000;
+          this.isRunning = true;
+          this.isPaused = false;
+
+          // Challenge mode specific
+          this.isChallengeMode = true;
+          this.challengeGoal = 40; // 40 lines
+          this.challengeTimeLimit = 180; // 3 minutes in seconds
+          this.challengeStartTime = Date.now();
+          this.challengeTimerInterval = null;
+
+          // Reset player state
+          this.player.pieceQ = [];
+          this.player.hold = null;
+          this.player.canHold = true;
+          this.refillQueue();
+
+          this.spawnPiece();
+          this.ui.hideScreens();
+          this.ui.updateHUD({ score: 0, level: this.level, lines: 0 });
+          this.drawQueue();
+
+          // Start challenge timer
+          this.startChallengeTimer();
+
+          try {
+            audio.startMusic();
+          } catch (e) { console.warn(e); }
+
+          this.update();
+        } catch (e) { console.error(e); }
+      }
+
+      startChallengeTimer() {
+        // Update timer every second
+        this.challengeTimerInterval = setInterval(() => {
+          const elapsed = Math.floor((Date.now() - this.challengeStartTime) / 1000);
+          const remaining = Math.max(0, this.challengeTimeLimit - elapsed);
+
+          // Update timer display
+          const minutes = Math.floor(remaining / 60);
+          const seconds = remaining % 60;
+          const timerDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+          // Update UI (you can add a timer element to the HUD)
+          const timerEl = document.getElementById('challengeTimer');
+          if (timerEl) {
+            timerEl.textContent = timerDisplay;
+          }
+
+          // Check if time is up
+          if (remaining === 0) {
+            this.endChallenge(false); // Failed - time's up
+          }
+        }, 1000);
+      }
+
+      endChallenge(success) {
+        // Stop timer
+        if (this.challengeTimerInterval) {
+          clearInterval(this.challengeTimerInterval);
+          this.challengeTimerInterval = null;
+        }
+
+        this.isChallengeMode = false;
+        this.isRunning = false;
+
+        // Show result
+        if (success) {
+          alert(`🎉 Challenge Complete! You cleared ${this.lines} lines in time!`);
+        } else {
+          alert(`⏰ Time's up! You cleared ${this.lines} lines. Goal was ${this.challengeGoal} lines.`);
+        }
+
+        // Return to start screen
+        const startScreen = document.getElementById("startScreen");
+        const appShell = document.querySelector(".app-shell");
+        const appHeader = document.querySelector(".app-header");
+
+        if (startScreen) startScreen.style.display = "flex";
+        if (appShell) appShell.style.display = "none";
+        if (appHeader) appHeader.style.display = "none";
       }
 
       refillQueue() {
@@ -1357,11 +1643,6 @@
           // The original code called checkClears then spawnPiece.
           // Let's stick to original flow but wrapped in merge?
           // Wait, original drop() called merge, then checkClears, then spawnPiece.
-          // merge() in original code:
-          //  ...
-          //  if (this.checkMission(this.missions.onPieceLock(player.didRotate))) return;
-          // It missed calling checkClears in merge!
-          // Ah, drop() called merge, then checkClears, then spawnPiece.
           // BUT input space hardDrop ALSO does this.
           // So merge() just places blocks.
 
@@ -1444,6 +1725,11 @@
           }
 
           this.ui.updateHUD({ score: this.score, level: this.level, lines: this.lines });
+
+          // Check if challenge goal is reached
+          if (this.isChallengeMode && this.lines >= this.challengeGoal) {
+            this.endChallenge(true); // Success!
+          }
         }
       }
 
